@@ -9,7 +9,7 @@ def main(image_path, n_clusters=4):
 
     # Build and train the autoencoder
     autoencoder = build_autoencoder()
-    train_autoencoder(autoencoder, img_data.astype('float32') / 255.0, epochs=100)
+    train_autoencoder(autoencoder, img_data.astype('float32') / 255.0, epochs=30)
 
     # Use the autoencoder to encode the data
     encoded_data = autoencoder.predict(img_data.astype('float32') / 255.0)

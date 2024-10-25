@@ -17,14 +17,39 @@ def reshape_image(img):
     return img.reshape((-1, 3))
 
 # Build the autoencoder model
+# def build_autoencoder():
+#     model = models.Sequential()
+#     model.add(layers.Input(shape=(3,)))
+#     model.add(layers.Dense(64, activation='relu'))
+#     model.add(layers.Dense(32, activation='relu'))
+#     model.add(layers.Dense(64, activation='relu'))
+#     model.add(layers.Dense(3, activation='sigmoid'))  # Output layer
+#     return model
+
+
+
+# Build the autoencoder model with attention
 def build_autoencoder():
-    model = models.Sequential()
-    model.add(layers.Input(shape=(3,)))
-    model.add(layers.Dense(64, activation='relu'))
-    model.add(layers.Dense(32, activation='relu'))
-    model.add(layers.Dense(64, activation='relu'))
-    model.add(layers.Dense(3, activation='sigmoid'))  # Output layer
-    return model
+    inputs = layers.Input(shape=(3,))  # Input layer for image features
+
+    # Encoder
+    x = layers.Dense(64, activation='relu')(inputs)
+    x = layers.Reshape((1, 64))(x)  # Reshape for attention (batch_size, seq_length, embedding_dim)
+
+    # Add Multi-Head Self Attention layer
+    attention_output = layers.MultiHeadAttention(num_heads=2, key_dim=64)(x, x)
+    attention_output = layers.Flatten()(attention_output)  # Flatten back to 1D vector
+
+    # Dense layers after attention
+    x = layers.Dense(32, activation='relu')(attention_output)
+    x = layers.Dense(64, activation='relu')(x)
+
+    # Decoder
+    outputs = layers.Dense(3, activation='sigmoid')(x)  # Output layer
+
+    autoencoder = models.Model(inputs, outputs)
+    return autoencoder
+
 
 # Train the autoencoder
 def train_autoencoder(autoencoder, data, epochs=50):
