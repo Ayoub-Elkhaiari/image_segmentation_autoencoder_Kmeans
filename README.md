@@ -166,9 +166,4 @@ The system includes robust error handling for:
 Contributions are welcome! Please feel free to submit pull requests, report bugs, and suggest features.
 
 
-If you use this code in your research, please cite:
-```
-[Add citation information here]
-```
-
 For questions and support, please open an issue in the repository.
